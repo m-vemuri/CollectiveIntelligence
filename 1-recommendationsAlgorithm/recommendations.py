@@ -1,7 +1,12 @@
 from math import sqrt
 
+# Calculation of Euclidean distance between two points.
+# Here, each person has preference data in prefs
+# the preference data is the point in the euclidean space.
 def sim_distance(prefs, person1, person2):
+    
     si = {}
+
     for item in prefs[person1]:
         if item in prefs[person2]:
             si[item] = 1
@@ -11,12 +16,9 @@ def sim_distance(prefs, person1, person2):
     
     sum_of_squares = sum([ pow( prefs[person1][item] - prefs[person2][item], 2 ) for item in si ])
 
-    print(sum_of_squares)
-
     return 1/(1 + sqrt(sum_of_squares))
 
 critics={
-
     'Lisa Rose': {
         'Lady in the Water': 2.5,
         'Snakes on a Plane': 3.5,
