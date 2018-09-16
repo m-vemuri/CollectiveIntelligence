@@ -55,6 +55,18 @@ def pearson_cor(prefs, person1, person2):
     return numerator/denominator
 
 
+def topMatches(prefs, person):
+
+    similars=[ (pearson_cor(prefs, person, item ), item)  for item in prefs if item != person ]
+
+    similars.sort()
+    similars.reverse()
+
+    print("\n\nTop 5 similar matches:\n")
+    
+    return similars[0:5]
+
+
 critics={
     'Lisa Rose': {
         'Lady in the Water': 2.5,
@@ -105,11 +117,11 @@ critics={
         'The Night Listener': 3.0
     },
     'Mukund Vemuri': {
-        'Lady in the Water': 4.0,
-        'Snakes on a Plane': 4.0,
+        #'Lady in the Water': 4.0,
+        'Snakes on a Plane': 4.5,
         #'Just My Luck': 3.0,
-        'Superman Returns': 5.0,
-        'You, Me and Dupree': 3.5,
-        'The Night Listener': 3.0
+        'Superman Returns': 4.0,
+        'You, Me and Dupree': 1.0,
+        #'The Night Listener': 3.0
     }
 }       
