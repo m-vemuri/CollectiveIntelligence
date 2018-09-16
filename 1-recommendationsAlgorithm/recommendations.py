@@ -51,6 +51,7 @@ def pearson_cor(prefs, person1, person2):
 
     numerator = ((n * sumOfProduct) - (sumOfX * sumOfY))
     denominator = sqrt( ((n * sumOfSqX) - sqOfSumX ) * ( (n * sumOfSqY) - sqOfSumY ) )
+    if denominator == 0: return 0
 
     return numerator/denominator
 
