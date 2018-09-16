@@ -18,6 +18,43 @@ def sim_distance(prefs, person1, person2):
 
     return 1/(1 + sqrt(sum_of_squares))
 
+# Calculation of the pearson correlation between two points
+# The pearson correlation gives a value between -1 and +1. 
+# A value of 0 implies no change with changes to either variable.
+# A value of -1 implies as one var increase, the other decreases.
+# A value of +1 implies as one var increases, the other increases.
+def pearson_cor(prefs, person1, person2):
+
+    si={}
+
+    # first find the common items in each
+    for item in prefs[person1]:
+        if item in prefs[person2]:
+            si[item]=1
+
+    if len(si) == 0: return 0
+
+    # number of elements
+    n = len(si)
+
+    sumOfProduct = sum([ (prefs[person1][item]*prefs[person2][item]) for item in si ])
+
+    sumOfX = sum( [ prefs[person1][item] for item in si ] )
+    sumOfY = sum( [ prefs[person2][item] for item in si ] )
+    
+    
+    sumOfSqX = sum( [ pow(prefs[person1][item],2) for item in si ] )
+    sumOfSqY = sum( [ pow(prefs[person2][item],2) for item in si ] )
+
+    sqOfSumX = pow(sumOfX,2)
+    sqOfSumY = pow(sumOfY,2)
+
+    numerator = ((n * sumOfProduct) - (sumOfX * sumOfY))
+    denominator = sqrt( ((n * sumOfSqX) - sqOfSumX ) * ( (n * sumOfSqY) - sqOfSumY ) )
+
+    return numerator/denominator
+
+
 critics={
     'Lisa Rose': {
         'Lady in the Water': 2.5,
