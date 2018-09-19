@@ -104,6 +104,18 @@ def getRecommendations(prefs, person):
 
     return recommend
 
+def transformPrefs(prefs):
+
+    transformed = {}
+    
+    for key, value in prefs.items():
+        for inner, val in value.items():
+            if inner not in transformed:
+                transformed[inner] = {}
+            transformed[inner].update({key : val})
+
+    return transformed
+
 critics={
     'Lisa Rose': {
         'Lady in the Water': 2.5,
