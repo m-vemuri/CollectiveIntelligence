@@ -67,6 +67,42 @@ def topMatches(prefs, person):
     
     return similars[0:5]
 
+def getRecommendations(prefs, person):
+
+    skip=[]
+
+    for item in prefs[person]:
+        skip.append(item)
+
+    # find the top 5 similar critics
+    similars = topMatches(prefs, person)
+
+    if len(similars) == 0:
+        return []
+    
+    # this dictionary will store the ratings
+    ratings = {}
+    # simultaneously, keep track of the similarity sum
+    similaritySum = {}
+
+    for similarity, critic in similars:
+        # as long as the critic rating is +ve
+        if similarity >= 0:
+            for movie in prefs[critic]:
+                if movie not in skip:
+                    if movie not in ratings:
+                        ratings[movie]=0
+                    ratings[movie] += similarity*prefs[critic][movie]
+                    if movie not in similaritySum:
+                        similaritySum[movie] = 0
+                    similaritySum[movie] += similarity
+    
+    recommend = [ ( (ratings[movie]/similaritySum[movie]), movie) for movie in ratings]
+
+    recommend.sort()
+    recommend.reverse()
+
+    return recommend
 
 critics={
     'Lisa Rose': {
