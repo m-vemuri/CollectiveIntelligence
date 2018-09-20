@@ -55,7 +55,7 @@ def pearson_cor(prefs, person1, person2):
 
     return numerator/denominator
 
-
+# returns top 5 similar matches 
 def topMatches(prefs, person):
 
     similars=[ (pearson_cor(prefs, person, item ), item)  for item in prefs if item != person ]
@@ -63,10 +63,13 @@ def topMatches(prefs, person):
     similars.sort()
     similars.reverse()
 
-    print("\n\nTop 5 similar matches:\n")
+    # print("\n\nTop 5 similar matches:\n")
     
     return similars[0:5]
 
+
+# get top recommendations for critics, 
+# or if you trasform the prefs, then it will give you items.
 def getRecommendations(prefs, person):
 
     skip=[]
@@ -85,6 +88,8 @@ def getRecommendations(prefs, person):
     # simultaneously, keep track of the similarity sum
     similaritySum = {}
 
+    # loop on the similar items that you have got
+    # and then create a weighted rating to recommend an item
     for similarity, critic in similars:
         # as long as the critic rating is +ve
         if similarity >= 0:
@@ -102,8 +107,13 @@ def getRecommendations(prefs, person):
     recommend.sort()
     recommend.reverse()
 
+    print("\n\nTop 5 similar matches:\n")
+
     return recommend
 
+# This is almost like a transpose of the prefs.
+# i.e. the inner becomes the outer and the outer
+# becomes the inner.
 def transformPrefs(prefs):
 
     transformed = {}
@@ -115,6 +125,46 @@ def transformPrefs(prefs):
             transformed[inner].update({key : val})
 
     return transformed
+
+# creates a dataset of similar items for each item. 
+def calculateSimilarItems(prefs):
+
+    transformed = transformPrefs(prefs)
+
+    result = {}
+
+    for item in transformed:
+        result[item] = topMatches(transformed, item)
+
+    return result
+
+def getRecommendedItems(prefs, person):
+    
+    similarItems = calculateSimilarItems(prefs)
+
+    totalSimilarity={}
+    totalRating={}
+
+    skip = []
+    for item in prefs[person]:
+        skip.append(item)
+
+    for movie in prefs[person]:
+        for similarity, similarMovie in similarItems[movie]:
+            if similarMovie not in skip:
+                if similarMovie not in totalSimilarity:
+                    totalSimilarity[similarMovie]=0
+                totalSimilarity[similarMovie]+=similarity
+                if similarMovie not in totalRating:
+                    totalRating[similarMovie]=0
+                totalRating[similarMovie]+=(prefs[person][movie]*similarity)
+    
+    recommended = [ (totalRating[movie]/totalSimilarity[movie], movie) for movie in totalRating]
+
+    recommended.sort()
+    recommended.reverse()
+
+    return recommended
 
 critics={
     'Lisa Rose': {
