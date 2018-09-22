@@ -159,12 +159,28 @@ def getRecommendedItems(prefs, person):
                     totalRating[similarMovie]=0
                 totalRating[similarMovie]+=(prefs[person][movie]*similarity)
     
-    recommended = [ (totalRating[movie]/totalSimilarity[movie], movie) for movie in totalRating]
+    recommended = [ (totalRating[movie]/totalSimilarity[movie], movie) for movie in totalRating if totalSimilarity[movie] != 0]
 
     recommended.sort()
     recommended.reverse()
 
     return recommended
+
+def loadMovieLens():
+
+    movies = {}
+    for line in open("./data/u.item", encoding = "ISO-8859-1"):
+        (id, title) = line.split('|')[0:2]
+        movies[id]=title
+    
+    prefs = {}
+    for line in open("./data/u.data", encoding = "ISO-8859-1"):
+        (userid, movieid, rating) = line.split("\t")[0:3]
+        if userid not in prefs:
+            prefs[userid]={}
+        prefs[userid][movies[movieid]] = float(rating)
+
+    return prefs
 
 critics={
     'Lisa Rose': {
