@@ -21,3 +21,16 @@ def getwords(html):
     txt = re.compile(r'<[^>]+>').sub('',html)
     words = re.compile(r'[^A-Z^a-z]+').split(txt)
     return [word.lower() for word in words if word!='']
+
+
+apcount = {}
+wordcounts = {}
+for url in open('data/feedlist.txt'):
+    title, wc = getwordcounts(url)
+    wordcounts[title] = wc
+    for word, count in wc.items():
+        apcount.setdefault(word, 0)
+        if count > 1:
+            apcount[word] += 1
+    
+    
